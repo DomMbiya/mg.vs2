@@ -1,0 +1,163 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Paleta institucional. Modo escritório (claro) */
+:root {
+  --bg: #ffffff;
+  --surface: #f8f6f7;
+  --surface-2: #efe9eb;
+  --ink: #231a1e;
+  --ink-soft: #5e5258;
+  --line: #e4dce0;
+  --line-strong: #8f8288;   /* Bordas de campos e controles: 3:1 sobre o fundo */
+  --accent: #b80032;        /* Vermelho BNB */
+  --accent-hover: #96002a;
+  --on-accent: #ffffff;
+  --detail: #ff8400;        /* Laranja de destaque e foco */
+  --pos: #17784a;
+  --warn: #a85300;
+  --neg: #b80032;
+  --neutral: #5e5258;
+  --elev-1: 0 1px 2px rgb(35 26 30 / 0.06), 0 1px 1px rgb(35 26 30 / 0.04);
+  --elev-2: 0 10px 30px -12px rgb(35 26 30 / 0.22), 0 2px 6px rgb(35 26 30 / 0.06);
+  --elev-3: 0 24px 60px -20px rgb(35 26 30 / 0.4);
+  /* Barra lateral: sempre escura, nos dois temas */
+  --sidebar: #22181D;
+  --sidebar-hover: #2E2228;
+  --sidebar-ativo: #3A2B32;
+  --sidebar-texto: #CDBFC5;
+  --sidebar-texto-forte: #F6EEF1;
+  --sidebar-linha: #4A3A42;
+  --sidebar-indicador: #FF4F7E;
+  /* Botão primário: igual nos dois temas */
+  --primario: #B80032;
+  --primario-hover: #F7004D;
+  --foco: #FF8400;
+}
+
+/* Modo apresentação (escuro), pensado para projetor fraco */
+.dark {
+  --bg: #170f13;
+  --surface: #20171b;
+  --surface-2: #2e2228;
+  --ink: #fbf3f6;
+  --ink-soft: #cdbfc5;
+  --line: #3c2f35;
+  --line-strong: #8a7980;
+  --accent: #ff4f7e;
+  --accent-hover: #ff7a9c;
+  --on-accent: #170f13;
+  --detail: #ff9a2e;
+  --pos: #5fe3a1;
+  --warn: #ffb35c;
+  --neg: #ff6b8f;
+  --neutral: #cdbfc5;
+  --elev-1: 0 1px 2px rgb(0 0 0 / 0.4);
+  --elev-2: 0 12px 32px -12px rgb(0 0 0 / 0.7);
+  --elev-3: 0 24px 60px -16px rgb(0 0 0 / 0.8);
+}
+
+@theme inline {
+  --font-sans: "Public Sans Variable", "Segoe UI", system-ui, sans-serif;
+  --font-mono: ui-monospace, "Cascadia Mono", "Segoe UI Mono", Consolas, monospace;
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-on-accent: var(--on-accent);
+  --color-detail: var(--detail);
+  --color-pos: var(--pos);
+  --color-warn: var(--warn);
+  --color-neg: var(--neg);
+  --color-neutral: var(--neutral);
+  --shadow-elev-1: var(--elev-1);
+  --shadow-elev-2: var(--elev-2);
+  --shadow-elev-3: var(--elev-3);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-hover: var(--sidebar-hover);
+  --color-sidebar-ativo: var(--sidebar-ativo);
+  --color-sidebar-texto: var(--sidebar-texto);
+  --color-sidebar-texto-forte: var(--sidebar-texto-forte);
+  --color-sidebar-linha: var(--sidebar-linha);
+  --color-sidebar-indicador: var(--sidebar-indicador);
+  --color-primario: var(--primario);
+  --color-primario-hover: var(--primario-hover);
+}
+
+html {
+  font-size: 100%;
+  background: var(--bg);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+body { font-family: var(--font-sans); font-feature-settings: "tnum" 1; background: var(--bg); }
+::selection { background: color-mix(in oklab, var(--accent) 22%, transparent); }
+
+/* Foco sempre visível, em laranja, nos dois temas e sobre a barra escura */
+:focus-visible {
+  outline: 3px solid var(--foco);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+/* Alvos de foco programático (conteúdo após trocar de página, bloco da decisão) não são controles: sem contorno */
+[tabindex="-1"]:focus { outline: none; }
+
+input[type="checkbox"], input[type="radio"] { accent-color: var(--accent); }
+
+/* Componentes compartilhados. Mantêm botões, campos e selos iguais em todas as páginas. */
+@layer components {
+  /* Botões: primário (uma ação principal por área), secundário, discreto e destrutivo */
+  .btn {
+    @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-[10px] px-[22px] py-2 text-center text-base font-semibold transition-colors;
+    @apply disabled:cursor-not-allowed disabled:opacity-45;
+  }
+  /* .btn-lg mantém a mesma altura de 48px: todos os botões seguem o mesmo padrão */
+  .btn-primary { @apply bg-primario font-bold text-white shadow-elev-1 hover:bg-primario-hover disabled:hover:bg-primario; }
+  .btn-secondary { @apply border border-line-strong bg-bg text-ink hover:bg-surface-2 disabled:hover:bg-bg; }
+  .btn-ghost { @apply text-ink-soft hover:bg-surface-2 hover:text-ink; }
+  .btn-danger { @apply border border-neg bg-bg text-neg hover:bg-neg/10; }
+  .btn-danger-solid { @apply bg-neg text-on-accent hover:opacity-90; }
+  .btn-icon { @apply rounded-lg p-2 text-ink-soft transition-colors hover:bg-surface-2 hover:text-ink disabled:opacity-40; }
+
+  /* Link de texto */
+  .link { @apply font-semibold text-accent underline-offset-4 hover:underline; }
+
+  /* Chips de filtro com aria-pressed */
+  .chip {
+    @apply inline-flex items-center gap-2 rounded-full border border-line bg-bg px-3.5 py-1.5 text-base font-semibold text-ink transition-colors;
+    @apply hover:border-line-strong disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-line;
+  }
+  .chip[aria-pressed="true"] { @apply border-ink bg-ink text-bg; }
+
+  /* Selos informativos (não clicáveis) */
+  .badge { @apply inline-flex items-center gap-1.5 rounded-md border px-2 py-0.5 text-sm font-semibold whitespace-nowrap; }
+  .badge-muted { @apply border-line bg-surface-2 text-ink-soft; }
+
+  /* Campos de formulário */
+  .field {
+    @apply rounded-lg border border-line-strong bg-bg px-3 py-2.5 text-base text-ink transition-colors;
+    @apply placeholder:text-ink-soft focus:border-accent;
+  }
+  .field-label { @apply text-base font-semibold; }
+
+  /* Superfícies */
+  .panel { @apply rounded-xl border border-line bg-surface; }
+  .panel-raised { @apply rounded-xl border border-line bg-bg shadow-elev-1; }
+
+  /* Tipografia de página */
+  .page-title { @apply text-[34px] leading-[1.15] font-bold tracking-[-0.025em]; }
+  .page-lead { @apply max-w-3xl text-[17px] text-ink-soft; }
+  .section-title { @apply text-xl font-bold tracking-tight; }
+  .eyebrow { @apply text-sm font-semibold text-ink-soft; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}

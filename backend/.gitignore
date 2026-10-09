@@ -1,0 +1,24 @@
+# Python bytecode e caches
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Ambientes virtuais e dependências
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.env
+
+# Arquivos de configurações e IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Arquivos de logs e banco de dados locais
+*.log
+*.sqlite3
