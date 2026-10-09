@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import { ArrowLeft, ArrowRight, CircleCheck, Download, CircleX } from 'lucide-react'
 import { Selo } from './Verdict'
 import { CabecalhoPagina } from './Pagina'
+import { BotaoGerarParecer } from './Parecer'
 import { CLASSES, ORDEM_CLASSES, TONS } from '../lib/format'
 
 export function Distribuicao({ resultados, filtro, aoFiltrar }) {
@@ -51,6 +52,7 @@ export function exportar(entradas, prefixo = 'pareceres-lei-do-bem') {
       decisao_analista: e.decisao?.classe ?? null,
       justificativa_analista: e.decisao?.motivo || null,
       decidido_em: e.decisao?.em ?? null,
+      analista: e.decisao?.analista ?? null,
       motor_e_analista_divergiram: e.divergente,
       analise_completa: e.resultado?.bruto ?? null,
     })),
@@ -83,8 +85,9 @@ export default function Results({ resultados, entradas }) {
         acoes={<>
           <Link to="/" className="btn btn-secondary"><ArrowLeft className="h-5 w-5" aria-hidden="true" /> Voltar ao início</Link>
           <button type="button" disabled={!entradas.length} onClick={() => exportar(entradas)} className="btn btn-secondary">
-            <Download className="h-5 w-5" aria-hidden="true" /> Exportar pareceres do lote
+            <Download className="h-5 w-5" aria-hidden="true" /> Exportar JSON
           </button>
+          <BotaoGerarParecer entradas={entradas} rotulo={entradas.length === 1 ? 'Gerar parecer (PDF)' : 'Gerar pareceres (PDF)'} className="btn btn-primary" />
         </>}
       />
 

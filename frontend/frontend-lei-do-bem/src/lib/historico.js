@@ -1,5 +1,6 @@
 // Histórico de análises persistido no navegador. Funções puras sobre a lista,
 // exceto carregar, salvar e limpar, que tocam o localStorage.
+import { normalizarAnalista } from './analista'
 
 export const CHAVE_HISTORICO = 'ldb:historico:v1'
 export const LIMITE_HISTORICO = 300
@@ -63,7 +64,7 @@ export function adicionarAnalise(lista, entrada) {
   return maisRecentesPrimeiro([entrada, ...lista.filter((e) => e.id !== entrada.id)])
 }
 
-// decisao: { classe, motivo, em } ou null para desfazer.
+// decisao: { classe, motivo, em, analista } ou null para desfazer. analista: quem decidiu, guardado junto.
 export function registrarDecisao(lista, entradaId, decisao) {
   return lista.map((e) => {
     if (e.id !== entradaId) return e
@@ -72,6 +73,7 @@ export function registrarDecisao(lista, entradaId, decisao) {
       classe: decisao.classe,
       motivo: decisao.motivo ?? '',
       em: new Date(decisao.em ?? Date.now()).toISOString(),
+      analista: normalizarAnalista(decisao.analista),
     }
     return { ...e, decisao: registrada, divergente: registrada.classe !== e.recomendacao }
   })

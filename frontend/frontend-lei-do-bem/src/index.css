@@ -158,6 +158,21 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--accent); }
   .eyebrow { @apply text-sm font-semibold text-ink-soft; }
 }
 
+/* Parecer para impressão / "Salvar como PDF": só o documento aparece no papel, sempre no tema claro */
+.impressao-raiz { display: none; }
+@media print {
+  @page { size: A4; margin: 16mm 15mm; }
+  html, html.dark {
+    --bg: #ffffff; --surface: #f8f6f7; --surface-2: #efe9eb; --ink: #231a1e; --ink-soft: #5e5258;
+    --line: #d9cfd4; --pos: #17784a; --warn: #a85300; --neg: #b80032; --neutral: #5e5258;
+    background: #ffffff;
+  }
+  body > *:not(.impressao-raiz) { display: none !important; }
+  .impressao-raiz { display: block; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .parecer { break-after: page; }
+  .parecer:last-child { break-after: auto; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }

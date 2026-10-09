@@ -6,14 +6,14 @@ import { ArrowRight, LoaderCircle } from 'lucide-react'
 export function CabecalhoPagina({ titulo, descricao, acoes, antes }) {
   return (
     <header className="flex flex-col gap-5 border-b border-line pb-6 md:flex-row md:items-end md:justify-between">
-      <div className="flex min-w-0 flex-col gap-1.5">
+      <div className="flex min-w-0 flex-col gap-1.5 md:flex-1">
         {antes}
         <h1 className="page-title">{titulo}</h1>
         {descricao && (typeof descricao === 'string'
           ? <p className="page-lead">{descricao}</p>
           : <div className="page-lead">{descricao}</div>)}
       </div>
-      {acoes && <div className="flex flex-wrap gap-3 md:shrink-0 md:justify-end">{acoes}</div>}
+      {acoes && <div className="flex flex-wrap gap-3 md:max-w-[60%] md:shrink-0 md:justify-end">{acoes}</div>}
     </header>
   )
 }

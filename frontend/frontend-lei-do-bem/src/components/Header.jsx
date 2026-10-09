@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom'
-import { History, House, Inbox, Moon, Sun } from 'lucide-react'
+import { History, House, Inbox, Moon, Sun, UserRound } from 'lucide-react'
 import { Simbolo } from './Logo'
 
 const LINKS = [
@@ -81,7 +81,7 @@ function OrigemDados({ modo, aoTrocarModo, bloqueado }) {
   )
 }
 
-export default function Header({ tema, aoTrocarTema, modo, aoTrocarModo, bloqueado }) {
+export default function Header({ tema, aoTrocarTema, modo, aoTrocarModo, bloqueado, analista, aoEditarAnalista }) {
   const escuro = tema === 'dark'
   return (
     <header className="bg-sidebar lg:fixed lg:inset-y-0 lg:left-0 lg:z-30 lg:w-[280px] lg:overflow-y-auto">
@@ -90,6 +90,18 @@ export default function Header({ tema, aoTrocarTema, modo, aoTrocarModo, bloquea
         <Navegacao />
         {/* No celular os controles ficam à direita do cabeçalho; na barra lateral, no rodapé dela. O DOM segue a ordem visual da barra lateral. */}
         <div className="ml-auto flex items-center gap-2 lg:mt-auto lg:ml-0 lg:flex-col lg:items-stretch lg:gap-3">
+          <button
+            type="button"
+            onClick={aoEditarAnalista}
+            aria-label={analista ? `Analista: ${analista.nome}. Editar nome do analista` : 'Identificar analista'}
+            className="flex min-w-0 items-center gap-3 rounded-lg border border-sidebar-linha p-2 text-left text-sm text-sidebar-texto transition-colors hover:bg-sidebar-hover hover:text-sidebar-texto-forte lg:px-3 lg:py-2.5"
+          >
+            <UserRound className="h-5 w-5 shrink-0" aria-hidden="true" />
+            <span className="hidden min-w-0 lg:block">
+              <span className="block truncate font-semibold text-sidebar-texto-forte">{analista ? analista.nome : 'Identificar analista'}</span>
+              <span className="block truncate">{analista ? 'Editar nome' : 'Nome para os pareceres'}</span>
+            </span>
+          </button>
           <OrigemDados modo={modo} aoTrocarModo={aoTrocarModo} bloqueado={bloqueado} />
           <button
             type="button"

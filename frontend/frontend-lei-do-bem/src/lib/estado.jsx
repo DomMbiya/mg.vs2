@@ -5,6 +5,7 @@ import { normalizarResultado } from './format'
 import { projetosExemplo } from './folders'
 import { carregarProjetos, salvarProjetos } from './armazenamento'
 import * as hist from './historico'
+import { carregarAnalista, normalizarAnalista, salvarAnalista } from './analista'
 
 const INTERVALO_MS = 1500
 const Contexto = createContext(null)
@@ -29,6 +30,9 @@ export function EstadoProvider({ children }) {
   const [erro, setErro] = useState(null)
   const [aviso, setAviso] = useState('')
   const [enviando, setEnviando] = useState(false)
+  const [analista, setAnalista] = useState(carregarAnalista)
+  // Diálogo dos dados do analista: aoSalvar continua a ação que pediu os dados (ex.: gerar o parecer)
+  const [pedidoAnalista, setPedidoAnalista] = useState(null)
   const timer = useRef(null)
   const historicoRef = useRef(historico)
 
@@ -192,8 +196,24 @@ export function EstadoProvider({ children }) {
   function decidir(entradaId, decisao) {
     const entrada = historicoRef.current.find((e) => e.id === entradaId)
     if (!entrada) return
-    atualizarHistorico((h) => hist.registrarDecisao(h, entradaId, decisao))
+    atualizarHistorico((h) => hist.registrarDecisao(h, entradaId, decisao && { ...decisao, analista }))
     anunciar(decisao ? `Decisão registrada para ${entrada.projeto_id}: ${decisao.classe}` : `Decisão de ${entrada.projeto_id} desfeita`)
+  }
+
+  function pedirDadosAnalista(aoSalvar = null) {
+    setPedidoAnalista({ aoSalvar })
+  }
+
+  function guardarAnalista(dados) {
+    const normalizado = normalizarAnalista(dados)
+    if (!normalizado) return false
+    setAnalista(normalizado)
+    if (!salvarAnalista(normalizado)) setErro('Não foi possível guardar os dados do analista neste navegador.')
+    const continuar = pedidoAnalista?.aoSalvar
+    setPedidoAnalista(null)
+    anunciar(`Analista identificado: ${normalizado.nome}`)
+    continuar?.(normalizado)
+    return true
   }
 
   function limparHistorico() {
@@ -216,6 +236,7 @@ export function EstadoProvider({ children }) {
   const valor = {
     modo, setModo, projetos, projetosProntos, job, emAndamento, historico, erro, setErro, aviso, anunciar, enviando,
     carregar, alternar, todos, remover, iniciar, retomar, decidir, limparHistorico, statusDe,
+    analista, pedidoAnalista, pedirDadosAnalista, guardarAnalista, fecharDadosAnalista: () => setPedidoAnalista(null),
     carregarExemplo: () => carregar({ projetos: projetosExemplo(), ignorados: 0 }),
   }
   return <Contexto.Provider value={valor}>{children}</Contexto.Provider>

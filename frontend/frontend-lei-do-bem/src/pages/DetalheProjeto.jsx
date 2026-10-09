@@ -4,6 +4,7 @@ import Findings from '../components/Findings'
 import Verdict, { EtiquetaSimulado, Selo } from '../components/Verdict'
 import { SeloStatus } from '../components/ProjectCard'
 import { CabecalhoPagina } from '../components/Pagina'
+import { BotaoGerarParecer } from '../components/Parecer'
 import { formatarDataHora } from '../lib/format'
 import { versoesDoProjeto } from '../lib/historico'
 import { useEstado } from '../lib/estado'
@@ -100,7 +101,7 @@ export default function DetalheProjeto() {
             {atual.modo === 'demo' && <EtiquetaSimulado />}
           </p>
         </>}
-        acoes={<div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-end">
+        acoes={<div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:flex-wrap sm:items-end sm:justify-end">
           {versoes.length > 1 && (
             <div className="flex w-full flex-col gap-1.5 sm:w-auto">
               <label htmlFor="seletor-versao" className="field-label">Versão exibida</label>
@@ -116,6 +117,7 @@ export default function DetalheProjeto() {
           <button type="button" onClick={irParaDecisao} className="btn btn-secondary">
             <Gavel className="h-5 w-5" aria-hidden="true" /> {atual.decisao ? 'Ver decisão' : 'Ir para a decisão'}
           </button>
+          <BotaoGerarParecer entradas={[atual]} />
         </div>}
       />
       </div>

@@ -4,6 +4,7 @@ import { AnimatePresence, MotionConfig, motion } from 'framer-motion'
 import { FlaskConical, TriangleAlert, X } from 'lucide-react'
 import Header from './components/Header'
 import Rodape from './components/Rodape'
+import DadosAnalista from './components/DadosAnalista'
 import Inicio from './pages/Inicio'
 import ProjetosAnalisar from './pages/ProjetosAnalisar'
 import Historico from './pages/Historico'
@@ -29,7 +30,7 @@ function tituloDaRota(caminho) {
 
 export default function App() {
   const [tema, setTema] = useState(lerTema)
-  const { modo, setModo, emAndamento, erro, setErro, aviso } = useEstado()
+  const { modo, setModo, emAndamento, erro, setErro, aviso, analista, pedirDadosAnalista } = useEstado()
   const location = useLocation()
   const principal = useRef(null)
   const primeiraRota = useRef(true)
@@ -59,6 +60,8 @@ export default function App() {
         modo={modo}
         aoTrocarModo={setModo}
         bloqueado={emAndamento}
+        analista={analista}
+        aoEditarAnalista={() => pedirDadosAnalista()}
       />
       {/* Área de conteúdo: à direita da barra lateral fixa em telas largas. Se a página tiver barra de ação fixa, o rodapé ganha espaço para não ficar escondido. */}
       <div className="flex min-h-screen flex-col bg-bg px-5 pb-4 pt-6 lg:pl-[calc(280px+48px)] lg:pr-12 lg:pb-5 lg:pt-10 has-[.barra-acao]:pb-28 lg:has-[.barra-acao]:pb-28">
@@ -102,6 +105,7 @@ export default function App() {
         </div>
       </div>
 
+      <DadosAnalista />
       <div aria-live="polite" className="sr-only">{aviso}</div>
     </MotionConfig>
   )
