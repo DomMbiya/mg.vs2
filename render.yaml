@@ -1,0 +1,20 @@
+# Blueprint do Render: backend FastAPI.
+# O deploy só acontece depois que a CI (GitHub Actions) passar na branch main.
+services:
+  - type: web
+    name: lei-do-bem-api
+    runtime: python
+    plan: free
+    rootDir: backend
+    branch: main
+    autoDeployTrigger: checksPass
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn src.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.8"
+      - key: GEMINI_API_KEY
+        sync: false   # preenchido no painel do Render, nunca no repositório
+      - key: GEMINI_MODEL
+        sync: false
